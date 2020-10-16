@@ -19,7 +19,7 @@ app.get("/", async (req, res) => {
   console.log(modifiedwebsiteContent);
   await page.setContent(modifiedwebsiteContent);
   await page.emulateMediaType("screen");
-  await page.pdf({ path: "./pdfs/demo.pdf", format: "A4" }).then(function () {
+  await page.pdf({ path: "/pdfs/demo.pdf", format: "A4" }).then(function () {
     browser.close();
     console.log("done");
     res.sendFile(__dirname + "/pdfs/demo.pdf");
