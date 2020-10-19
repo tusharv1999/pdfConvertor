@@ -11,12 +11,15 @@ app.get("/", async (req, res) => {
     });
   }
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox"],
+  });
   const page = await browser.newPage();
   await page.goto(query, { waitUntil: "networkidle2" });
   const websiteContent = await page.content();
   const modifiedwebsiteContent = websiteContent.replace(`class="pdf-vdo"`, "");
-  console.log(modifiedwebsiteContent);
+  // console.log(modifiedwebsiteContent);
   await page.setContent(modifiedwebsiteContent);
   await page.emulateMediaType("screen");
   await page.pdf({ path: "/pdfs/demo.pdf", format: "A4" }).then(function () {
