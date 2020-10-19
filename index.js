@@ -18,7 +18,10 @@ app.get("/", async (req, res) => {
   const page = await browser.newPage();
   await page.goto(query, { waitUntil: "networkidle2" });
   const websiteContent = await page.content();
-  const modifiedwebsiteContent = websiteContent.replace(`class="pdf-vdo"`, "");
+  const modifiedwebsiteContent = websiteContent.replace(
+    /class="pdf-vdo"|<video .*?>.+?<\Wvideo>|<a href="#" class="exprt-pdf">.*?<\Wa>/gms,
+    ""
+  );
   await page.setContent(modifiedwebsiteContent);
   await page.emulateMediaType("screen");
   let pathName = `/tmp/converted-${Date.now()}.pdf`;
