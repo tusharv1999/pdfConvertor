@@ -25,11 +25,18 @@ app.get("/", async (req, res) => {
   await page.setContent(modifiedwebsiteContent);
   await page.emulateMediaType("screen");
   let pathName = `/tmp/converted-${Date.now()}.pdf`;
-  await page.pdf({ path: pathName, format: "A4" }).then(function () {
-    browser.close();
-    console.log("done");
-    res.sendFile(pathName);
-  });
+  await page
+    .pdf({
+      path: pathName,
+      format: "A4",
+      margin: { top: 50, bottom: 50 },
+      // margin: { bottom: 50 },
+    })
+    .then(function () {
+      browser.close();
+      console.log("done");
+      res.sendFile(pathName);
+    });
 });
 
 const PORT = process.env.PORT || 8200;
