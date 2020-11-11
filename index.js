@@ -4,7 +4,6 @@ const puppeteer = require("puppeteer");
 
 app.get("/", async (req, res) => {
   let query = req.query.url;
-  console.log(query);
   if (!query) {
     res.status(400).send({
       message: "Path is missing.",
@@ -18,7 +17,6 @@ app.get("/", async (req, res) => {
   const page = await browser.newPage();
   await page.goto(query, { waitUntil: "networkidle2" });
   const websiteContent = await page.content();
-  console.log(websiteContent);
   const modifiedwebsiteContent = websiteContent.replace(
     /class="pdf-vdo"|<video .*?>.+?<\Wvideo>|handover-web-link|<a href="#" class="exprt-pdf">.*?<\Wa>/gms,
     ""
@@ -32,12 +30,15 @@ app.get("/", async (req, res) => {
       path: pathName,
       format: "A4",
       margin: { top: 50, bottom: 50 },
-      // margin: { bottom: 50 },
     })
     .then(function () {
       browser.close();
       console.log("done");
-      res.sendFile(pathName);
+      res.sendFile(pathName, (err) => {
+        if (err) {
+          fs.unlink(pathName);
+        }
+      });
     });
 });
 
