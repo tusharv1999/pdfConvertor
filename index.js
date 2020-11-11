@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const puppeteer = require("puppeteer");
-
+const fs = require("fs");
 app.get("/", async (req, res) => {
   let query = req.query.url;
   if (!query) {
@@ -34,9 +34,10 @@ app.get("/", async (req, res) => {
     .then(function () {
       browser.close();
       console.log("done");
+      // res.sendFile(pathName);
       res.sendFile(pathName, (err) => {
-        if (err) {
-          fs.unlink(pathName);
+        if (!err) {
+          fs.unlinkSync(pathName);
         }
       });
     });
